@@ -9,12 +9,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Background
+# Background
 
 Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do.
 We use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset). 
 
-## Data
+# Data
 The training data for this project are available here: 
 https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
 The test data are available here:
@@ -122,7 +122,7 @@ print(confusionMatrix(predict(modelrf,validation),validation$classe))
 ```
 Random Forest had an accuracy of 0.9992 on training set and 0.9904 on validation Set.
 
-#Conclusion and Prediction:
+# Conclusion and Prediction:
 
 The validation set accuracy (out-of-sample) for random forest 0.9904 was far greater than out-of-sample accuracy for decision tree 0.4996.
 
