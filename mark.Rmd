@@ -1,0 +1,134 @@
+---
+title: "Human Activiry Recognition"
+author: "Himank Jain"
+date: "07/08/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Background
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do.
+We use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset). 
+
+## Data
+The training data for this project are available here: 
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
+The test data are available here:
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+The data for this project come from this source: http://groupware.les.inf.puc-rio.br/har.
+
+
+# Synopsis
+
+In this analysis We use har dataset to predict if the excercise done by participants was right or not.
+The outcome variable classe is a factor with 5 levels : A B C D E
+aPrticipants were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl in 5 different fashions:
+exactly according to the specification (Class A)
+throwing the elbows to the front (Class B)
+lifting the dumbbell only halfway (Class C)
+lowering the dumbbell only halfway (Class D)
+throwing the hips to the front (Class E)?
+
+We Use Random forest and Decision trees two train our Models, cross validate the results and predict on a test set of 20 observations.
+
+
+# Cross Validation:
+
+Cross Validation is done by subsampling our trainSet data set into training(75%) and validation(25%) datasets.
+The model is trained on training dataset and validated on validation dataset.
+The test set is used to predict the outcome for 20 observations.
+
+```{r}
+set.seed(123)
+trainset<-read.csv("C:/Users/himank/Documents/R/ml course proj/pml-training.csv")
+testing<-read.csv("C:/Users/himank/Documents/R/ml course proj/pml-testing.csv")
+dim(trainset)
+table(trainset$classe)
+```
+Loading Required Libraries:
+```{r}
+library(caret)
+library(rattle)
+```
+
+
+
+Partitioning the TrainingSet:
+```{r}
+partition<-createDataPartition(y=trainset$classe,p=0.75,list=F)
+training<-trainset[partition,]
+validation<-trainset[-partition,]
+```
+
+# Cleaning And Preprocessing And Feature Selection:
+Removing near-zero variance variables:
+```{r}
+training<-training[,-nearZeroVar(training)]
+```
+Removing Descriptive Variables:
+```{r}
+Cl<-c("X", "user_name", "raw_timestamp_part_1", "raw_timestamp_part_2", 
+  "cvtd_timestamp", "new_window", "num_window")
+
+training <- training[,!names(training) %in% Cl]
+```
+Removing Variables with more than 60% NA values:
+```{r}
+training[training==""] <- NA
+naproportion<-sapply(training,function(x) sum(is.na(x))/nrow(training))
+training<-training[!(naproportion>0.60)]
+dim(training)
+```
+
+# Training Model: Decision Tree
+
+Traning With Decision Tree:
+```{r}
+modelrp<-train(classe~.,data=training,method='rpart')
+```
+Prediction on training Model and accuracy on traning Set:
+```{r}
+predictrp<-predict(modelrp,training)
+print(confusionMatrix(predictrp,training$classe))
+fancyRpartPlot(modelrp$finalModel)
+```
+
+Accuracy on Validation set:
+```{r}
+print(confusionMatrix(predict(modelrp,validation),validation$classe))
+```
+
+Decision Trees had an accuracy of 0.4944 on training set and 0.4996 on validation Set.
+
+
+
+# Training Model: Random Forest
+Training with Random Forest:
+```{r}
+modelrf<-train(classe~.,data=training,method='rf',ntree=10)
+```
+Prediction on training Model and Accuracy on training Set:
+```{r}
+predictrf<-predict(modelrf,training)
+print(confusionMatrix(predictrf,training$classe))
+```
+Accuracy on Validation Set:
+```{r}
+print(confusionMatrix(predict(modelrf,validation),validation$classe))
+```
+Random Forest had an accuracy of 0.9992 on training set and 0.9904 on validation Set.
+
+#Conclusion and Prediction:
+
+The validation set accuracy (out-of-sample) for random forest 0.9904 was far greater than out-of-sample accuracy for decision tree 0.4996.
+
+Prediction on test set:
+```{r}
+predictions<-predict(modelrf,testing)
+predictions
+```
+
