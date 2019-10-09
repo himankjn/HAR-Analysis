@@ -2,7 +2,9 @@
 title: "Human Activiry Recognition"
 author: "Himank Jain"
 date: "07/08/2019"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -44,8 +46,8 @@ The test set is used to predict the outcome for 20 observations.
 
 ```{r}
 set.seed(123)
-trainset<-read.csv("C:/Users/himank/Documents/R/ml course proj/pml-training.csv")
-testing<-read.csv("C:/Users/himank/Documents/R/ml course proj/pml-testing.csv")
+trainset<-read.csv("C:/Users/himan/Desktop/HAR-Analysis/pml-training.csv")
+testing<-read.csv("C:/Users/himan/Desktop/HAR-Analysis/pml-testing.csv")
 dim(trainset)
 table(trainset$classe)
 ```
