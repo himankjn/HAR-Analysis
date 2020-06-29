@@ -13,9 +13,9 @@ The data for this project come from this source: http://groupware.les.inf.puc-ri
 
 # Synopsis
 
-In this analysis We use har dataset to predict if the excercise done by participants was right or not.
+In this analysis We use har dataset to predict if the exercise done by participants was right or not.
 The outcome variable classe is a factor with 5 levels : A B C D E
-aPrticipants were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl in 5 different fashions:
+Participants were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl in 5 different fashions:
 exactly according to the specification (Class A)
 throwing the elbows to the front (Class B)
 lifting the dumbbell only halfway (Class C)
